@@ -9,40 +9,52 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 ////////////////////////
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-
-"use client"
-
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-
-import { toast } from "@/components/hooks/use-toast"
-import { Button } from "@/components/ui/button"
+import { toast } from "@/components/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
+// Zod schema to validate two date fields
 const FormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-})
+  startDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, { message: "Date must be in yyyy-mm-dd format." })
+    .refine((date) => new Date(date) >= new Date("2017-01-01"), {
+      message: "Date must not be earlier than 2017-01-01.",
+    })
+    .refine((date) => new Date(date) <= new Date("2021-01-01"), {
+      message: "Date must not be later than 2021-01-01.",
+    }),
+  endDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, { message: "Date must be in yyyy-mm-dd format." })
+    .refine((date) => new Date(date) >= new Date("2017-01-01"), {
+      message: "Date must not be earlier than 2017-01-01.",
+    })
+    .refine((date) => new Date(date) <= new Date("2021-01-01"), {
+      message: "Date must not be later than 2021-01-01.",
+    }),
+});
 
-export function InputForm() {
+export function DateForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "",
+      startDate: "",
+      endDate: "",
     },
-  })
+  });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     toast({
@@ -52,32 +64,54 @@ export function InputForm() {
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
-    })
+    });
+
+    console.log(data);
+
   }
 
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+  return (<Form {...form}>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-4">
+      {/* <div className=""> */}
+      {/* Start Date Field */}
+      <FormField
+        control={form.control}
+        name="startDate"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <Input className="bg-white" type="date" placeholder="yyyy-mm-dd" {...field} />
+            </FormControl>
+            <FormLabel className="text-white">Start Date</FormLabel>
+
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {/* End Date Field */}
+      <FormField
+        control={form.control}
+        name="endDate"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <Input className="bg-white" type="date" placeholder="yyyy-mm-dd" {...field} />
+            </FormControl>
+            <FormLabel className="text-white">End Date</FormLabel>
+
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <div className="flex flex-col">
+        {/* <FormLabel className="text-white">End Date</FormLabel> */}
         <Button type="submit">Submit</Button>
-      </form>
-    </Form>
-  )
+      </div>
+      {/* </div> */}
+    </form>
+  </Form>
+  );
 }
 
 
@@ -123,59 +157,68 @@ export function ChartComponent() {
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-  })
- 
-  function onDateSubmit(data: z.infer<typeof FormSchema>) {
+    defaultValues: {
+      startDate: "",
+      endDate: "",
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
+    
+    setStartDate(data.startDate);
+    setEndDate(data.endDate);
   }
- 
+
+  async function fetchChartData(startDate: string, endDate: string) {
+    try {
+      const res50 = await basicAxios(
+        `/historical-data?symbol=NIFTY%20BANK&from_data=${startDate}%2000:00:00%2B05:30&to_data=${endDate}%2023:59:59%2B05:30`,
+        undefined,
+        undefined,
+        'GET'
+      );
+      const resbank = await basicAxios(
+        `/historical-data?symbol=NIFTY%2050&from_data=${startDate}%2000:00:00%2B05:30&to_data=${endDate}%2023:59:59%2B05:30`,
+        undefined,
+        undefined,
+        'GET'
+      );
+
+      const mergedData = res50.data.map((item: _CHARTDATA) => {
+        const bankItem = resbank.data.find((bank: _CHARTDATA) => bank.date === item.date);  // Find the matching date in resbank
+        const formattedDate = new Date(item.date).toLocaleDateString('en-CA');
+
+        return {
+          date: formattedDate,
+          nifty50: item.price,
+          niftybank: bankItem ? bankItem.price : 0, // Fallback to 0 if no matching data is found
+        };
+      });
+
+      setChartData(mergedData);
+      setLoaded(true);
+
+
+      console.log(mergedData, "gggggggg");
+
+      // const data = await res.json();
+      setFetch50Data(res50.data);
+      setFetchBankData(resbank.data);
+    } catch (error) {
+      console.error("Failed to fetch chart data:", error);
+    }
+  }
 
   const [fetched50Data, setFetch50Data] = React.useState<_CHARTDATA>()
   const [fetchedBankData, setFetchBankData] = React.useState<_CHARTDATA>()
   const [loaded, setLoaded] = React.useState(false);
+  const [startDate, setStartDate] = React.useState("2017-01-01");
+  const [endDate, setEndDate] = React.useState("2021-01-01");
   React.useEffect(() => {
-    async function fetchChartData() {
-      try {
-        const res50 = await basicAxios(
-          `/historical-data?symbol=NIFTY%20BANK&from_data=2019-12-10%2000:00:00%2B05:30&to_data=2021-12-15%2023:59:59%2B05:30`,
-          undefined,
-          undefined,
-          'GET'
-        );
-        const resbank = await basicAxios(
-          `/historical-data?symbol=NIFTY%2050&from_data=2019-12-10%2000:00:00%2B05:30&to_data=2021-12-15%2023:59:59%2B05:30`,
-          undefined,
-          undefined,
-          'GET'
-        );
 
-        const mergedData = res50.data.map((item: _CHARTDATA) => {
-          const bankItem = resbank.data.find((bank: _CHARTDATA) => bank.date === item.date);  // Find the matching date in resbank
-          const formattedDate = new Date(item.date).toLocaleDateString('en-CA');
-
-          return {
-            date: formattedDate,
-            nifty50: item.price,
-            niftybank: bankItem ? bankItem.price : 0, // Fallback to 0 if no matching data is found
-          };
-        });
-
-        setChartData(mergedData);
-        setLoaded(true);
-
-
-        console.log(mergedData, "gggggggg");
-
-        // const data = await res.json();
-        setFetch50Data(res50.data);
-        setFetchBankData(resbank.data);
-      } catch (error) {
-        console.error("Failed to fetch chart data:", error);
-      }
-    }
-
-    fetchChartData();
-  }, []);
+    fetchChartData(startDate, endDate);
+  }, [startDate, endDate]);
 
   // const total = React.useMemo(
   //   () => ({
@@ -202,8 +245,47 @@ export function ChartComponent() {
           <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
             <CardTitle>NIFTY CHART</CardTitle>
             <CardDescription>
-              <DatePickerDemo />
-              <DatePickerDemo />
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-4">
+                  {/* <div className=""> */}
+                  {/* Start Date Field */}
+                  <FormField
+                    control={form.control}
+                    name="startDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input className="bg-white" type="date" placeholder="yyyy-mm-dd" {...field} />
+                        </FormControl>
+                        <FormLabel className="text-white">Start Date</FormLabel>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* End Date Field */}
+                  <FormField
+                    control={form.control}
+                    name="endDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input className="bg-white" type="date" placeholder="yyyy-mm-dd" {...field} />
+                        </FormControl>
+                        <FormLabel className="text-white">End Date</FormLabel>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex flex-col">
+                    {/* <FormLabel className="text-white">End Date</FormLabel> */}
+                    <Button type="submit">Submit</Button>
+                  </div>
+                  {/* </div> */}
+                </form>
+              </Form>
             </CardDescription>
           </div>
           <div className="flex">
