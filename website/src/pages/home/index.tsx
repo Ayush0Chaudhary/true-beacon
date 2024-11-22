@@ -1,4 +1,4 @@
-import { ChartComponent } from '@/components/chart';
+import { ChartComponent, DatePickerForm } from '@/components/chart';
 import { ModeToggle } from '@/components/mode-toggle';
 
 const Homepage = () => {
@@ -8,7 +8,8 @@ const Homepage = () => {
         {/* <Navbar /> */}
         {/* <Separator /> */}
         <ModeToggle/>
-        <ChartComponent/>
+        <DatePickerForm/>
+        {/* <ChartComponent/> */}
         <div className='max-w-full mx-auto px-8'>
           {/* Adjusted max-w-full to make content expand to the maximum width */}
           {/* <HoverEffect items={projects} /> */}
