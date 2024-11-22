@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Line, LineChart, XAxis } from "recharts"
 
 import {
   Card,
@@ -16,6 +16,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import { basicAxios } from "@/services/basicAxios"
+import { _CHARTDATA } from "@/types"
 const chartData = [
   { date: "2024-04-01", desktop: 222, mobile: 150 },
   { date: "2024-04-02", desktop: 97, mobile: 180 },
@@ -104,49 +106,107 @@ const chartData = [
   { date: "2024-06-24", desktop: 132, mobile: 180 },
   { date: "2024-06-25", desktop: 141, mobile: 190 },
   { date: "2024-06-26", desktop: 434, mobile: 380 },
-  { date: "2024-06-27", desktop: 448, mobile: 4900 },
-  { date: "2024-06-28", desktop: 149, mobile: 2000 },
-  { date: "2024-06-29", desktop: 103, mobile: 1600 },
-  { date: "2024-06-30", desktop: 446, mobile: 4000 },
+  { date: "2024-06-27", desktop: 448, mobile: 490 },
+  { date: "2024-06-28", desktop: 149, mobile: 200 },
+  { date: "2024-06-29", desktop: 103, mobile: 160 },
+  { date: "2024-06-30", desktop: 446, mobile: 400 },
 ]
+
 
 const chartConfig = {
   views: {
-    label: "Page Views",
+    label: "Price",
   },
-  desktop: {
-    label: "Desktop",
+  nifty50: {
+    label: "NIFTY 50",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  niftybank: {
+    label: "NIFTY BANK",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig
 
-export function Component() {
+export function ChartComponent() {
   const [activeChart, setActiveChart] =
-    React.useState<keyof typeof chartConfig>("desktop")
+    React.useState<keyof typeof chartConfig>("nifty50")
 
-  const total = React.useMemo(
-    () => ({
-      desktop: chartData.reduce((acc, curr) => acc + curr.desktop, 0),
-      mobile: chartData.reduce((acc, curr) => acc + curr.mobile, 0),
-    }),
-    []
-  )
+  const [chartData, setChartData] = React.useState([
+    { date: "2024-04-01", nifty50: 222, niftybank: 150 },
+    { date: "2024-04-02", nifty50: 97, niftybank: 180 },
+    { date: "2024-04-03", nifty50: 167, niftybank: 120 }
+  ]);
+
+  const [fetched50Data, setFetch50Data] = React.useState<_CHARTDATA>()
+  const [fetchedBankData, setFetchBankData] = React.useState<_CHARTDATA>()
+
+
+  React.useEffect(() => {
+    async function fetchChartData() {
+      try {
+        const res50= await basicAxios(
+          `/historical-data?symbol=NIFTY%20BANK&from_data=2017-12-10%2000:00:00%2B05:30&to_data=2021-12-15%2023:59:59%2B05:30`,
+          undefined,
+          undefined,
+          'GET'
+        );        
+        const resbank = await basicAxios(
+          `/historical-data?symbol=NIFTY%2050&from_data=2017-12-10%2000:00:00%2B05:30&to_data=2021-12-15%2023:59:59%2B05:30`,
+          undefined,
+          undefined,
+          'GET'
+        );
+
+        const mergedData = res50.data.map((item: _CHARTDATA) => {
+          const bankItem = resbank.data.find((bank: _CHARTDATA) => bank.date === item.date);  // Find the matching date in resbank
+          const formattedDate = new Date(item.date).toLocaleDateString('en-CA');
+
+          return {
+            date: formattedDate,
+            nifty50: item.price,
+            niftybank: bankItem ? bankItem.price : 0, // Fallback to 0 if no matching data is found
+          };
+        });
+
+        setChartData(mergedData);
+
+        console.log(mergedData,"gggggggg");
+        
+        // const data = await res.json();
+        setFetch50Data(res50.data);
+        setFetchBankData(resbank.data);
+      } catch (error) {
+        console.error("Failed to fetch chart data:", error);
+      }
+    }
+
+    fetchChartData();
+  }, []);
+
+  // const total = React.useMemo(
+  //   () => ({
+  //     desktop: chartData.reduce((acc, curr) => acc + curr.nifty50, 0),
+  //     mobile: chartData.reduce((acc, curr) => acc + curr.niftybank, 0),
+  //   }),
+  //   []
+  // )
+  function print() { 
+    console.log(fetched50Data);
+    console.log(fetchedBankData);
+   }
 
   return (
     <Card>
+      <button onClick={print}>test button</button>
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-          <CardTitle>Line Chart - Interactive</CardTitle>
+          <CardTitle>NIFTY CHART</CardTitle>
           <CardDescription>
-            Showing total visitors for the last 3 months
+            Prices of NIFTY 50 and NIFTY BANK
           </CardDescription>
         </div>
         <div className="flex">
-          {["desktop", "mobile"].map((key) => {
+          {["nifty50", "niftybank"].map((key) => {
             const chart = key as keyof typeof chartConfig
             return (
               <button
@@ -159,7 +219,8 @@ export function Component() {
                   {chartConfig[chart].label}
                 </span>
                 <span className="text-lg font-bold leading-none sm:text-3xl">
-                  {total[key as keyof typeof total].toLocaleString()}
+                  {/* {total[key as keyof typeof total].toLocaleString()} */}
+                  {21}
                 </span>
               </button>
             )
@@ -171,7 +232,7 @@ export function Component() {
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
-          <LineChart
+          {/* <LineChart
             accessibilityLayer
             data={chartData}
             margin={{
@@ -189,6 +250,7 @@ export function Component() {
               tickFormatter={(value) => {
                 const date = new Date(value)
                 return date.toLocaleDateString("en-US", {
+                  year: "2-digit",
                   month: "short",
                   day: "numeric",
                 })
@@ -216,7 +278,49 @@ export function Component() {
               strokeWidth={2}
               dot={false}
             />
-          </LineChart>
+          </LineChart> */}
+             <BarChart
+            accessibilityLayer
+            data={chartData}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              minTickGap={32}
+              tickFormatter={(value) => {
+                const date = new Date(value)
+                return date.toLocaleDateString("en-US", {
+                  year:"2-digit",
+                  month: "short",
+                  // day: "numeric",
+                })
+              }}
+            />
+            <ChartTooltip
+              content={
+                <ChartTooltipContent
+                  className="w-[150px]"
+                  nameKey="views"
+                  labelFormatter={(value) => {
+                    return new Date(value).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })
+                  }}
+                />
+              }
+            />
+            <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
+          </BarChart>
+
         </ChartContainer>
       </CardContent>
     </Card>

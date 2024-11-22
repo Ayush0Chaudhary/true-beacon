@@ -34,7 +34,7 @@ export class HistoricalDataService {
             const rawData = await this.prisma.$queryRaw`SELECT * FROM HistoricalPrices WHERE date >= ${start} AND date <= ${end} AND instrument_name = ${symbol}`;
               console.log(rawData);
 
-            return dta;
+            return rawData;
         }
     }
 
