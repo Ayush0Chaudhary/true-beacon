@@ -14,18 +14,18 @@ export const basicAxios = async (
 ) => {
   // console.log(BACKEND_URL);
   const BACKEND_URL = 'http://localhost:3000';
-  // const authToken = global.localStorage.getItem('S3X_N1_M1!3_CA');
+  const authToken = localStorage.getItem('access_token');
   const res = await axios({
     baseURL: BACKEND_URL,
     url: endpoint,
     method: method || 'GET',
-    // headers: {
-    //   'Authorization': 'dcoinsd23423k4b23jk4nk23jb4jk23b4ij23lsads3242dfs34esk ' + authToken || '',
-    //   'Content-Type': 'application/json',
-    //   'Access-Control-Allow-Origin': '*',
-    //   'Access-Control-Allow-Credentials': true,
-    //   // 'X-CSRFToken': readCSRFToken() || '',
-    // },
+    headers: {
+      'Authorization': 'Bearer ' + authToken || '',
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+      // 'X-CSRFToken': readCSRFToken() || '',
+    },
     data: body,
     ...options,
   });

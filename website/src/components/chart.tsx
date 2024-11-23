@@ -133,6 +133,7 @@ import {
 import { basicAxios } from "@/services/basicAxios"
 import { _CHARTDATA } from "@/types"
 import { DatePickerDemo } from "./ui/date-picker"
+import Loader from "./ui/loader";
 
 
 const chartConfig = {
@@ -237,8 +238,7 @@ export function ChartComponent() {
   // const [graph, setGraph] = React.useState("bar");  
 
   return (
-    !loaded ? <><Skeleton className="w-[300px] h-[30px] rounded-full m-2" /><Skeleton className="w-[250px] h-[30px] rounded-full m-2" /></>
-      :
+    !loaded ?   <Loader/>  :
       <Card>
         {/* <button onClick={print}>test button</button> */}
         <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">

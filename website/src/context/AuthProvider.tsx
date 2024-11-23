@@ -1,0 +1,48 @@
+import Loader from '@/components/ui/loader';
+import { basicAxios } from '@/services/basicAxios';
+import { createContext, useContext, useState, useEffect } from 'react';
+
+interface _AUTH_CONTEXT {
+  username: string | undefined;
+}
+
+const AuthContext = createContext<_AUTH_CONTEXT>({
+  username: undefined,
+});
+
+export function useAuth() {
+  return useContext(AuthContext);
+}
+
+export default function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [username, setUsername] = useState<string | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function getSession() {
+      try {
+        const res = await basicAxios('/auth/status', undefined, undefined, 'GET');
+        if (res.data.status === 'ok') {
+          setUsername(res.data.username); // Update based on API response
+        } else {
+          setUsername(undefined);
+        }
+      } catch (error) {
+        console.error('Failed to fetch session:', error);
+        setUsername(undefined);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getSession();
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  const authValue = { username };
+
+  return <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>;
+}

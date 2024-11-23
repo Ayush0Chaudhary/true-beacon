@@ -19,3 +19,61 @@ model HistoricalPrices {
   price           Int
   instrument_name String
 }
+
+model User {
+  user_id      Int      @id @default(autoincrement())
+  user_type    String
+  email        String
+  user_name    String   @unique
+  broker       String
+  password     String
+  name        String
+
+  Holdings Holdings[]
+
+  Order Order[]
+}
+
+
+    // {
+    //   "tradingsymbol": "IDEA",
+    //   "exchange": "NSE",
+    //   "isin": "INE669E01016",
+    //   "quantity": 5,
+    //   "authorised_date": "2021-06-08 00:00:00",
+    //   "average_price": 8.466,
+    //   "last_price": 10,
+    //   "close_price": 10.1,
+    //   "pnl": 7.6700000000000035,
+    //   "day_change": -0.09999999999999964,
+    //   "day_change_percentage": -0.9900990099009866
+    // }
+model Holdings {
+  id              Int      @id @default(autoincrement())
+  tradingsymbol   String
+  exchange        String
+  isin            String
+  quantity        Int
+  authorised_date DateTime
+  average_price   Float
+  last_price      Float
+  close_price     Float
+  pnl             Float
+  day_change      Float
+  day_change_percentage Float
+  user            User     @relation(fields: [user_id], references: [user_id])
+  user_id         Int
+}
+
+  // "symbol": "NIFTY",
+  // "price": 10000,
+  // "quantity": 10
+
+  model Order {
+    id              Int      @id @default(autoincrement())
+    symbol          String
+    price           Float
+    quantity        Int
+    user            User     @relation(fields: [user_id], references: [user_id])
+    user_id         Int
+  }
