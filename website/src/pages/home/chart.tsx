@@ -59,8 +59,8 @@ const FormSchema = z.object({
     .refine((date) => new Date(date) >= new Date("2017-01-01"), {
       message: "Date must not be earlier than 2017-01-01.",
     })
-    .refine((date) => new Date(date) <= new Date("2021-01-01"), {
-      message: "Date must not be later than 2021-01-01.",
+    .refine((date) => new Date(date) <= new Date("2021-12-31"), {
+      message: "Date must not be later than 2021-12-31.",
     }),
   endDate: z
     .string()
@@ -68,8 +68,8 @@ const FormSchema = z.object({
     .refine((date) => new Date(date) >= new Date("2017-01-01"), {
       message: "Date must not be earlier than 2017-01-01.",
     })
-    .refine((date) => new Date(date) <= new Date("2021-01-01"), {
-      message: "Date must not be later than 2021-01-01.",
+    .refine((date) => new Date(date) <= new Date("2021-12-31"), {
+      message: "Date must not be later than 2021-12-31.",
     }),
 });
 
