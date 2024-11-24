@@ -95,6 +95,7 @@ export function ChartComponent() {
   }
 
   async function fetchChartData(startDate: string, endDate: string) {
+    setLoaded(false);
     try {
       const res50 = await basicAxios(
         `/historical-data?symbol=NIFTY%20BANK&from_data=${startDate}%2000:00:00%2B05:30&to_data=${endDate}%2023:59:59%2B05:30`,
@@ -148,13 +149,15 @@ export function ChartComponent() {
     console.log(fetched50Data);
     console.log(fetchedBankData);
     console.log(vlur);
-
+    console.log(loaded);
+    
   }
 
 
   return (
     !loaded ? <Loader /> :
       <Card >
+        {/* <button onClick={print}>ffff</button> */}
         {/* <button onClick={print}>test button</button> */}
         <CardHeader className="flex flex-col items-stretch space-y-0 border-b border-input   p-0 sm:flex-row">
           <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
@@ -198,7 +201,7 @@ export function ChartComponent() {
                   />
                   <div className="flex flex-col">
                     {/* <FormLabel className="text-white">End Date</FormLabel> */}
-                    <Button type="submit" >Submit</Button>
+                    <Button type="submit" >{loaded ? "Submit" : "Loading"}</Button>
                   </div>
                   {/* </div> */}
                 </form>
