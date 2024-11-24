@@ -36,7 +36,7 @@ import {
 } from "@/components/ui/chart"
 import { basicAxios } from "@/services/basicAxios"
 import { _CHARTDATA } from "@/types"
-import Loader from "./ui/loader";
+import Loader from "../../components/ui/loader";
 
 
 const chartConfig = {
@@ -198,11 +198,11 @@ export function ChartComponent() {
                   />
                   <div className="flex flex-col">
                     {/* <FormLabel className="text-white">End Date</FormLabel> */}
-                    <Button type="submit" className="rounded-xl">Submit</Button>
+                    <Button type="submit" >Submit</Button>
                   </div>
                   {/* </div> */}
                 </form>
-                <FormDescription className="pt-2">
+                <FormDescription className="pt-2 ">
                   Select Date between 2/01/2017 and 31/12/2021
                 </FormDescription>
               </Form>
