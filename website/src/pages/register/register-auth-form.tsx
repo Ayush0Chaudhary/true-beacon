@@ -140,8 +140,13 @@ export function UserAuthForm() {
         Login
       </Button>
       { localStorage.getItem('access_token') &&
-      <Button onClick={() => {navigate('/')}}
-                    className="text-white w-full mt-4">Go to DashBoard</Button>}</>
+      <Button 
+      // onClick={() => {navigate('/')}}
+      className="text-white w-full mt-4">Go to DashBoard{<link rel="stylesheet" href="/"  />}</Button>
+      }
+      
+
+      </>
 
 
   );

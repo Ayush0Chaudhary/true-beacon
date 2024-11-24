@@ -15,7 +15,7 @@ const AuthRequired = ({ children }: { children: React.ReactNode }) => {
     }else {
       console.log("Username exists");
       
-      navigate('/');
+      // navigate('/');
     }
     setShow(true);
   }, [username, navigate]);

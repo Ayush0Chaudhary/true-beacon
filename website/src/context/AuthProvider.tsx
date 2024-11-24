@@ -25,6 +25,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         // const res = await basicAxios(API_ENDPOINTS.STATUS, undefined, undefined, 'GET');
         const at = localStorage.getItem('access_token');
         if (at !== null) {
+          console.log('Access token:', at);
+          
           setUsername(at); // Update based on API response
         } else {
           setUsername(undefined);
