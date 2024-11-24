@@ -1,4 +1,5 @@
 import Loader from '@/components/ui/loader';
+import { API_ENDPOINTS } from '@/const';
 import { basicAxios } from '@/services/basicAxios';
 import { createContext, useContext, useState, useEffect } from 'react';
 
@@ -21,7 +22,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     async function getSession() {
       try {
-        const res = await basicAxios('/auth/status', undefined, undefined, 'GET');
+        const res = await basicAxios(API_ENDPOINTS.STATUS, undefined, undefined, 'GET');
         if (res.data.status === 'ok') {
           setUsername(res.data.username); // Update based on API response
         } else {

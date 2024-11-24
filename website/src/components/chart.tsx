@@ -141,11 +141,11 @@ const chartConfig = {
     label: "Price",
   },
   nifty50: {
-    label: "NIFTY 50",
+    label: "NIFTY",
     color: "hsl(var(--chart-1))",
   },
   niftybank: {
-    label: "NIFTY BANK",
+    label: "NIFTY",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig
@@ -303,7 +303,7 @@ export function ChartComponent() {
                   </span>
                   <span className="text-lg font-bold leading-none sm:text-3xl">
                     {/* {total[key as keyof typeof total].toLocaleString()} */}
-                    {21}
+                    {key === 'nifty50' ? '50' : 'BANK'}
                   </span>
                 </button>
               )

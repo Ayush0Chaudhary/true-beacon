@@ -2,6 +2,7 @@ import { basicAxios } from '@/services/basicAxios';
 import { _USER_PROFILE } from '@/types';
 import { useEffect, useState } from 'react';
 import Loader from '../../../components/ui/loader';
+import { API_ENDPOINTS } from '@/const';
 // import './profile-card.css';
 
 // export type _USER_PROFILE = {
@@ -20,7 +21,7 @@ const ProfileCard = () => {
     useEffect(() => {
         async function getUser() {
             try {
-                const res = await basicAxios('/auth/me', undefined, undefined, 'GET');
+                const res = await basicAxios(API_ENDPOINTS.ME, undefined, undefined, 'GET');
                 // console.log('User:', res.data);
 
                 setUser(res.data);

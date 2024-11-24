@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards } fro
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 
-@Controller('auth')
+@Controller('user')
 export class AuthController {
   constructor(private authService: AuthService) { }
 
@@ -25,7 +25,7 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('me')
+  @Get('profile')
   async me(@Req() req: Request) {
     // console.log('User:', req['user'].username);
     

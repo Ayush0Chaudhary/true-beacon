@@ -16,8 +16,11 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import React from "react"
+import React, { useEffect } from "react"
 import { basicAxios } from "@/services/basicAxios"
+import { API_ENDPOINTS } from "@/const";
+import { useAuth } from "@/context/AuthProvider";
+import { time } from "console";
 
 
 const formSchema = z.object({
@@ -38,6 +41,13 @@ export function UserAuthForm() {
         },
     })
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
+    const [message, setMessage] = React.useState<string | null>("This will be your username for logging in.");
+    useEffect(() => {
+        // const token = localStorage.getItem('access_token');
+        console.log(Date.now());
+        
+
+    }   , []);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values.username)
@@ -48,17 +58,26 @@ export function UserAuthForm() {
             password: values.password,
         };
         const res = await basicAxios(
-            `/auth/login`,
+            API_ENDPOINTS.LOGIN,
             body,
             undefined,
             'POST'
         );
         console.log(res.data['access_token']);
         localStorage.setItem('access_token', res.data['access_token']);
-        if (res.status === 200) {
+        if (res.data['access_token']) {
             console.log('success');
-            navigate('/');
+
+            setTimeout(() => {
+                console.log('Task executed after 200ms');
+                navigate('/');
+            }, 1000);
+          
+        }else {
+            // console.log('failed');
+            setMessage('Invalid username or password');
         }
+
     }
 
     return (
@@ -90,7 +109,7 @@ export function UserAuthForm() {
                                     </FormItem>
                                 )} />
                             <FormDescription>
-                                This will be your username for logging in.
+                                {message?.charAt(0) === 'T' ? message : ( <div className="text-red-700">{message}</div> )}
                             </FormDescription>
                             <FormMessage />
                         </FormItem>

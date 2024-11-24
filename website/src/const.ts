@@ -4,15 +4,13 @@
 export const API_ENDPOINTS = {
     
     // AUTH API
-    LOGIN: '/auth/login',
-    REGISTER: '/auth/register',
-    STATUS: '/auth/status',
-    ME: '/auth/me',
+    LOGIN: '/user/login',
+    REGISTER: '/user/register',
+    STATUS: '/user/status',
+    ME: '/user/profile',
 
     // USERS API
-    HOLDINGS: '/users/holdings',
-    ORDER: '/users/order',
-
-
+    HOLDINGS: '/users/portfolio/holdings',
+    ORDER: '/users/order/place_order',
 
 };
