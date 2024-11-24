@@ -13,7 +13,7 @@ export const basicAxios = async (
   method?: string
 ) => {
   // console.log(BACKEND_URL);
-  const BACKEND_URL = 'http://localhost:3000';
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const authToken = localStorage.getItem('access_token');
   const res = await axios({
     baseURL: BACKEND_URL,

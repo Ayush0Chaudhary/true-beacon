@@ -10,7 +10,7 @@ services:
     env_file:
       - ../.env
     ports:
-      - 5173:5173
+      - 8701:5173
     volumes:
       - ../package.json:/alpexlab/package.json
       - ../package-lock.json:/alpexlab/package-lock.json
