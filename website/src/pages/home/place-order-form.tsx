@@ -114,8 +114,9 @@ export function PlaceOrderForm() {
                             <FormMessage />
                         </FormItem>
                     )} />
-                <Button type="submit">Place Order</Button>
-
+                    <div className="flex justify-center mt-4 ">
+                <Button type="submit" className="rounded-xl">Place Order</Button>
+                </div>
             </form>
         </Form>
         </div>

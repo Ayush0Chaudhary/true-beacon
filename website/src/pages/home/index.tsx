@@ -105,8 +105,11 @@ const Homepage = () => {
     <div className='bg-black min-h-screen p-8'>
       <div className='container mx-auto'>
         {/* <Navbar /> */}
-        <Separator />
+        {/* <Separator /> */}
         {/* <DateForm/> */}
+        <div className='flex justify-end '>
+      <Button variant="outline" className='text-white m-2 rounded-xl'  onClick={(e) => { localStorage.removeItem('access_token'); navigate('/login') }}>Logout</Button>
+      </div>
         <div>
           <ChartComponent />
           <div className='flex flex-row w-full justify-center'>
@@ -132,9 +135,7 @@ const Homepage = () => {
           {/* <HoverEffect items={projects} /> */}
         </div>
       </div>
-      <button onClick={handle}>holding</button>
 
-      <Button variant="outline" className='text-white' onClick={(e) => { localStorage.removeItem('access_token'); navigate('/login') }}>Logout</Button>
     </div>
   );
 };
