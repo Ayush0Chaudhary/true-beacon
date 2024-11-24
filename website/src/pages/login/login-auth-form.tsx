@@ -86,7 +86,7 @@ export function UserAuthForm() {
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)} // Prevents default refresh
-                            className="space-y-6 sm:space-y-8"
+                            className="space-y-5"
                         >
                             {/* Username Field */}
                             <FormField
@@ -128,11 +128,12 @@ export function UserAuthForm() {
 
                             {/* Message Display */}
                             <FormDescription>
-                                {message?.charAt(0) === "T" ? (
+                                {/* {message?.charAt(0) === "T" ? (
                                     message
                                 ) : (
                                     <div className="text-red-700">{message}</div>
-                                )}
+                                )} */}
+                                {message }
                             </FormDescription>
 
                             {/* Submit Button */}

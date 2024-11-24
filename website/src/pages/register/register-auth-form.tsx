@@ -74,7 +74,7 @@ export function UserAuthForm() {
     <>{!success ? <><Form {...form}>
       <form onSubmit={
         // e.preventDefault();
-        form.handleSubmit(onSubmit)} className="space-y-8">
+        form.handleSubmit(onSubmit)} className="space-y-5">
         <FormField
           control={form.control}
           name="username"
