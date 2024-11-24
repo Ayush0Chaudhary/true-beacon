@@ -12,6 +12,7 @@ import { API_ENDPOINTS } from '@/const';
 import PnlCard from './pnl-card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import LiveNifty from './live-nifty';
 
 
 
@@ -104,6 +105,10 @@ const Homepage = () => {
         <div>
           <ChartComponent />
           <ProfileCard />
+          {tableLoading ? <Loader /> :
+        <DataTable columns={columns} data={holdings} />
+
+      }
         </div>
         <div className='max-w-full mx-auto px-8'>
           {/* Adjusted max-w-full to make content expand to the maximum width */}
@@ -111,13 +116,11 @@ const Homepage = () => {
         </div>
       </div>
       <button onClick={handle}>holding</button>
-      {tableLoading ? <Loader /> :
-        <DataTable columns={columns} data={holdings} />
 
-      }
       <PnlCard initialNumber={totalPnl} />
       <PlaceOrderForm />
       <Button variant="outline" className='text-white' onClick={(e) => { localStorage.removeItem('access_token'); navigate('/login') }}>Logout</Button>
+      <LiveNifty/>
     </div>
   );
 };

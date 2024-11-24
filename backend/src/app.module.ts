@@ -8,6 +8,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { HistoricalDataService } from './historical-data/historical-data.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { NiftyPriceGateway } from './nifty-price/nifty-price.gateway';
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { UsersModule } from './users/users.module';
     UsersModule,
   ],
   controllers: [AppController, HistoricalDataController],
-  providers: [AppService, PrismaService, HistoricalDataService],
+  providers: [AppService, PrismaService, HistoricalDataService, NiftyPriceGateway],
 })
 export class AppModule {}
