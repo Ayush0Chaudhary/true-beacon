@@ -14,5 +14,3 @@ export const API_ENDPOINTS = {
     ORDER: '/users/order/place_order',
 
 };
-
-export const WEBSOCKET_URL = "ws://localhost:3000/";
