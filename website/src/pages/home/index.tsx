@@ -1,4 +1,4 @@
-import { ChartComponent, DateForm } from '@/components/chart';
+import { ChartComponent, DateForm } from '@/pages/home/chart';
 import { ModeToggle } from '@/components/mode-toggle';
 import ProfileCard from '@/pages/home/profile-card.tsx';
 import { basicAxios } from '@/services/basicAxios';
@@ -102,31 +102,31 @@ const Homepage = () => {
     fetchHoldings();
   }, [])
   return (
-    <div className='bg-black min-h-screen p-8'>
-      <div className='container mx-auto'>
+    <div className='bg-black min-h-screen p-8 '>
+      <div className='container mx-auto '>
         {/* <Navbar /> */}
         {/* <Separator /> */}
         {/* <DateForm/> */}
         <div className='flex justify-end '>
-      <Button variant="outline" className='text-white m-2 rounded-xl'  onClick={(e) => { localStorage.removeItem('access_token'); navigate('/login') }}>Logout</Button>
-      </div>
+          <Button variant="outline" className='text-white m-2 rounded-xl' onClick={(e) => { localStorage.removeItem('access_token'); navigate('/login') }}>Logout</Button>
+        </div>
         <div>
           <ChartComponent />
-          <div className='flex flex-row w-full justify-center'>
-          <ProfileCard />
+          <div className='flex flex-row w-full justify-between'>
+            <ProfileCard />
 
-      <PnlCard initialNumber={totalPnl} header={ "Total:"}  />
-      <PnlCard initialNumber={totalp} header={ "Profit:"}  />
-      <PnlCard initialNumber={totall} header={ "Loss:"}  />
-      <LiveNifty/>
+            <PnlCard initialNumber={totalPnl} header={"Total:"} />
+            <PnlCard initialNumber={totalp} header={"Profit:"} />
+            <PnlCard initialNumber={totall} header={"Loss:"} />
+            <LiveNifty />
 
-      </div>
+          </div>
           {tableLoading ? <Loader /> :
-        <DataTable columns={columns} data={holdings} />
+            <DataTable columns={columns} data={holdings} />
 
-      }
-      <div className='justify-center w-full flex'>      <PlaceOrderForm/>
-      </div>
+          }
+          <div className='justify-center w-full flex'>      <PlaceOrderForm />
+          </div>
 
 
         </div>
