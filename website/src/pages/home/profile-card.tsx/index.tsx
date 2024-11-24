@@ -37,7 +37,7 @@ const ProfileCard = () => {
     return (
         loading ? <Loader /> :
             user &&
-            <div className='border border-input rounded-xl text-card-foreground shadow  p-4 bg-[#000000] w-[300px] '>
+            <div className=' m-2 border border-input rounded-xl text-card-foreground shadow  p-4 bg-[#000000] w-[300px] '>
                 <div className='flex items-center'>
                     <div className='flex-shrink-0'>
                         <img className='h-12 w-12 rounded-full' src='https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50' alt='User avatar' />

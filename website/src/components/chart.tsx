@@ -1,19 +1,13 @@
-"use client"
 
 import * as React from "react"
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
-import { Skeleton } from "@/components/ui/skeleton"
 
 
-
-
-////////////////////////
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { toast } from "@/components/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -25,7 +19,38 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-// Zod schema to validate two date fields
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
+import { basicAxios } from "@/services/basicAxios"
+import { _CHARTDATA } from "@/types"
+import Loader from "./ui/loader";
+
+
+const chartConfig = {
+  views: {
+    label: "Price",
+  },
+  nifty50: {
+    label: "NIFTY",
+    color: "hsl(var(--chart-1))",
+  },
+  niftybank: {
+    label: "NIFTY",
+    color: "hsl(var(--chart-2))",
+  },
+} satisfies ChartConfig
 const FormSchema = z.object({
   startDate: z
     .string()
@@ -46,109 +71,6 @@ const FormSchema = z.object({
       message: "Date must not be later than 2021-01-01.",
     }),
 });
-
-export function DateForm() {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      startDate: "",
-      endDate: "",
-    },
-  });
-
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-
-    console.log(data);
-
-  }
-
-  return (<Form {...form}>
-    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-4">
-      {/* <div className=""> */}
-      {/* Start Date Field */}
-      <FormField
-        control={form.control}
-        name="startDate"
-        render={({ field }) => (
-          <FormItem>
-            <FormControl>
-              <Input className="bg-white" type="date" placeholder="yyyy-mm-dd" {...field} />
-            </FormControl>
-            <FormLabel className="text-white">Start Date</FormLabel>
-
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      {/* End Date Field */}
-      <FormField
-        control={form.control}
-        name="endDate"
-        render={({ field }) => (
-          <FormItem>
-            <FormControl>
-              <Input className="bg-white" type="date" placeholder="yyyy-mm-dd" {...field} />
-            </FormControl>
-            <FormLabel className="text-white">End Date</FormLabel>
-
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <div className="flex flex-col">
-        {/* <FormLabel className="text-white">End Date</FormLabel> */}
-        <Button type="submit">Submit</Button>
-      </div>
-      {/* </div> */}
-    </form>
-  </Form>
-  );
-}
-
-
-///////////////////////////
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
-import { basicAxios } from "@/services/basicAxios"
-import { _CHARTDATA } from "@/types"
-import { DatePickerDemo } from "./ui/date-picker"
-import Loader from "./ui/loader";
-
-
-const chartConfig = {
-  views: {
-    label: "Price",
-  },
-  nifty50: {
-    label: "NIFTY",
-    color: "hsl(var(--chart-1))",
-  },
-  niftybank: {
-    label: "NIFTY",
-    color: "hsl(var(--chart-2))",
-  },
-} satisfies ChartConfig
 
 export function ChartComponent() {
   const [activeChart, setActiveChart] =
@@ -255,7 +177,7 @@ export function ChartComponent() {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input className="bg-white" type="date" placeholder="yyyy-mm-dd" {...field} />
+                          <Input className=" text-white appearance-none" type="date" placeholder="yyyy-mm-dd" {...field} />
                         </FormControl>
                         <FormLabel className="text-white">Start Date</FormLabel>
 

@@ -46,7 +46,7 @@ const LiveNifty: React.FC = () => {
 
 
 return (
-    <div className='p-4 border border-input rounded-xl w-[380px]'>
+    <div className='p-4 m-2 border border-input rounded-xl w-[380px]'>
     <h1 className='text-white '>Live Nifty Data</h1>
     <h1 className='text-muted-foreground pb-5'>Value updated via websocket every 3 seconds</h1>
     <div className={`flex items-center ${increase ? 'text-green-700' : 'text-red-700'} text-2xl `}>

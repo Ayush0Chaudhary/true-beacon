@@ -69,7 +69,7 @@ export function PlaceOrderForm() {
     }
 
     return (
-        <div className="border border-input rounded-xl text-card-foreground shadow p-4 w-[300px]"><Form {...form}>
+        <div className="border border-input rounded-xl text-card-foreground shadow p-4 "><Form {...form}>
             <CardTitle className="pb-4">Place order</CardTitle>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField

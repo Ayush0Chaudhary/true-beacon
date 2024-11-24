@@ -44,6 +44,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
+import { CardTitle } from "@/components/ui/card";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -77,9 +78,11 @@ export function DataTable<TData, TValue>({
     <div>
 
     <div className="content-center border border-input rounded-xl text-card-foreground shadow aspect-auto w-full  text-white">
+    <div className="flex m-2 p-2">
+    <CardTitle className="">Your Holdings</CardTitle>
     <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="ml-auto rounded-xl">
               Columns
             </Button>
           </DropdownMenuTrigger>
@@ -105,7 +108,7 @@ export function DataTable<TData, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-
+        </div>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

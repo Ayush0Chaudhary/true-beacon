@@ -4,7 +4,7 @@
 
 import { cn } from "@/lib/utils"
 // import { buttonVariants } from "@/componentsui/button"
-import { UserAuthForm } from "./user-auth-form"
+import { UserAuthForm } from "./register-auth-form"
 import { buttonVariants } from "@/components/ui/button"
 // import { UserAuthForm } from "@/app/(app)/examples/authentication/components/user-auth-form"
 
