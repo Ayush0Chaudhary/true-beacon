@@ -61,9 +61,7 @@ export default function LoginAuthenticationPage() {
               </p>
             </div>
             <UserAuthForm />
-            <p className="px-8 text-center text-sm text-muted-foreground">
-              By clicking continue, you agree to our Terms of Service and Privacy Policy.
-            </p>
+
           </div>
         </div>
       </div>
