@@ -20,6 +20,7 @@ import { Icons } from "@/components/icons"
 import React from "react"
 import { basicAxios } from "@/services/basicAxios"
 import { API_ENDPOINTS } from "@/const";
+import { setSeconds } from "date-fns";
 
 
 const formSchema = z.object({
@@ -40,8 +41,8 @@ export function UserAuthForm() {
   })
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
-
-  
+  const [success, setSuccess] = React.useState<boolean>(false)
+  const [message, setMessage] = React.useState<string | null>("Choose distinct username and password.")
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values.username)
@@ -62,17 +63,18 @@ export function UserAuthForm() {
     localStorage.setItem('access_token', res.data['access_token']);
     if(res.status === 201 && res.data['access_token']) {
       navigate('/');
-        
-
+      setSuccess(true);
+    }else 
+    {
+      setMessage("Username already exists. Try again with a different username.");
     }
   }
 
   return (
-    <><Form {...form}>
+    <>{!success ? <><Form {...form}>
       <form onSubmit={
         // e.preventDefault();
-        form.handleSubmit(onSubmit)
-      } className="space-y-8">
+        form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="username"
@@ -113,7 +115,7 @@ export function UserAuthForm() {
                   </FormItem>
                 )} />
               <FormDescription>
-                This will be your username for logging in.
+                {message}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -130,11 +132,12 @@ export function UserAuthForm() {
           </div>
         </div>
       </form>
-    </Form>
-
-      <Button variant="outline" className="text-white" onClick={() => { navigate('/login') }}>
+    </Form><Button variant="outline" className="text-white" onClick={() => { 
+      console.log(success);
+      
+      navigate('/login'); } }>
         Login
-      </Button>
+      </Button></>: <Button variant="secondary">Proceed to Dashboard</Button>}
     </>
 
   );
