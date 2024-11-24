@@ -74,7 +74,7 @@ function LoginAuthenticationPage() {
   const [error, setError] = useState("");
 
   const handleInputChange = (e) => {
-    console.log(e.target);
+    // console.log(e.target);
 
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });

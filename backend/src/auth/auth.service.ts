@@ -24,7 +24,6 @@ export class AuthService {
     const user = await this.usersService.findOne(username);
 
     if (user && this.verifyPassword(password, user.password)) {
-      // const { password, ...result } = user;
       const payload = { sub: user.user_id, username: user.user_name };
       return {
         access_token: await this.jwtService.signAsync(payload),
@@ -42,8 +41,6 @@ export class AuthService {
     if (user) {
       return new UnauthorizedException();
     } else {
-        
-
       const hash = await this.encryptPassword(password);
       const newUser = await this.usersService.create({
         username: username,
@@ -58,7 +55,7 @@ export class AuthService {
   }
 
   async encryptPassword(password: string): Promise<string> {
-    const saltRounds = 10; // Number of salt rounds (higher = more secure, but slower)
+    const saltRounds = 10;
     try {
       const hash = await bcrypt.hash(password, saltRounds);
       return hash;

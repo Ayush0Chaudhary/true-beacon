@@ -19,7 +19,6 @@ export class NiftyPriceGateway implements OnGatewayInit, OnGatewayConnection, On
     setInterval(() => {
         const price = Math.floor(Math.random() * 10000 + 23000);
         client.emit('price', {price: price});
-        this.logger.log('Price sent: ' + price);  
     }, 3000);
   }
   handleConnection(client: Socket) {

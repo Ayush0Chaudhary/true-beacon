@@ -29,13 +29,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <RootLayout />,
-    children: [
-      {
-        index: true,
-        element: <LoginAuthenticationPage />,
-      },
-    ],
+    element: <LoginAuthenticationPage />,
   }
 ]);
 

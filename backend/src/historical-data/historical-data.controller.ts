@@ -17,7 +17,6 @@ export class HistoricalDataController {
     @Query('to_data') to_data: string,
     @Query('symbol') symbol: string,
   ) {
-    // console.log(from_data, to_data), symbol;
     const value = await this.cacheManager.get(`${from_data}-${to_data}-${symbol}`);
     if (value) {
       console.log('Cache hit');

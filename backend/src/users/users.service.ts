@@ -41,7 +41,7 @@ export class UsersService {
         name: data.name,
         broker: 'ZERODHA',
         user_type: 'individual',
-        email: data.username + "@gmail.com", // Assuming email is the same as username
+        email: data.username + "@gmail.com", 
       }
     });
   }

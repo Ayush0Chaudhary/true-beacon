@@ -10,7 +10,6 @@ export class HistoricalDataService {
       const startDate = new Date(start);
       const endDate = new Date(end);
 
-      // Validate the dates
       if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
         throw new BadRequestException(
           'Invalid date format. Please provide valid ISO 8601 dates.',
@@ -19,18 +18,9 @@ export class HistoricalDataService {
 
       const rawData = await this.prisma
         .$queryRaw`SELECT * FROM HistoricalPrices WHERE date >= ${start} AND date <= ${end} AND instrument_name = ${symbol}`;
-      // console.log(rawData);
       
       return rawData;
     }
   }
 
-  private parseISODate(dateString: string): Date | null {
-    try {
-      const parsedDate = new Date(dateString);
-      return isNaN(parsedDate.getTime()) ? null : parsedDate;
-    } catch (error) {
-      return error;
-    }
-  }
 }
