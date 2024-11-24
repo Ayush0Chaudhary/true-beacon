@@ -22,9 +22,10 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     async function getSession() {
       try {
-        const res = await basicAxios(API_ENDPOINTS.STATUS, undefined, undefined, 'GET');
-        if (res.data.status === 'ok') {
-          setUsername(res.data.username); // Update based on API response
+        // const res = await basicAxios(API_ENDPOINTS.STATUS, undefined, undefined, 'GET');
+        const at = localStorage.getItem('access_token');
+        if (at !== null) {
+          setUsername(at); // Update based on API response
         } else {
           setUsername(undefined);
         }

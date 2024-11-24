@@ -4,22 +4,7 @@ import { UserAuthForm } from "./login-auth-form"
 export default function LoginAuthenticationPage() {
   return (
     <>
-      <div className="md:hidden">
-        <img
-          src="/examples/authentication-light.png"
-          width={1280}
-          height={843}
-          alt="Authentication"
-          className="block dark:hidden"
-        />
-        <img
-          src="/examples/authentication-dark.png"
-          width={1280}
-          height={843}
-          alt="Authentication"
-          className="hidden dark:block"
-        />
-      </div>
+
       <div className="container relative hidden min-h-screen grid-cols-[2fr_1fr] lg:grid lg:max-w-none lg:px-0 bg-[#08080B]">
         {/* Left section */}
         <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
