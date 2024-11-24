@@ -42,7 +42,7 @@ export function UserAuthForm() {
 
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string | null>("This will be your username for logging in.");
-
+    const [success, setSuccess] = React.useState<boolean>(false);
     useEffect(() => {
         console.log(Date.now());
     }, []);
@@ -65,10 +65,9 @@ export function UserAuthForm() {
 
             if (res.data["access_token"]) {
                 console.log("success");
-                // setTimeout(() => {
-                    console.log("Task executed after 200ms");
-                    navigate("/");
-                // }, 1000);
+                console.log("Task executed after 200ms");
+                navigate("/");
+                setSuccess(true);
             } else {
                 setMessage("Invalid username or password");
             }
@@ -82,74 +81,91 @@ export function UserAuthForm() {
 
     return (
         <>
-            <Form {...form}>
-                <form
-                    onSubmit={form.handleSubmit(onSubmit)} // Prevents default refresh
-                    className="space-y-8"
-                >
-                    <FormField
-                        control={form.control}
-                        name="username"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="text-white">Username</FormLabel>
-                                <FormControl>
-                                    <Input className="text-white" placeholder="JohnDoe123" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="text-white">Password</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        className="text-white"
-                                        type="password"
-                                        placeholder="********"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormDescription>
-                                    Your password must be at least 8 characters long.
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormDescription>
-                        {message?.charAt(0) === "T" ? (
-                            message
-                        ) : (
-                            <div className="text-red-700">{message}</div>
-                        )}
-                    </FormDescription>
-                    <Button type="submit" disabled={isLoading}>
-                        {isLoading ? "Loading..." : "Submit"}
+            {!success ?
+                <div className="p-4 sm:max-w-md lg:max-w-lg mx-auto">
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit)} // Prevents default refresh
+                            className="space-y-6 sm:space-y-8"
+                        >
+                            {/* Username Field */}
+                            <FormField
+                                control={form.control}
+                                name="username"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-white">Username</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                className="text-white w-full"
+                                                placeholder="JohnDoe123"
+                                                {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+
+                            {/* Password Field */}
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-white">Password</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                className="text-white w-full"
+                                                type="password"
+                                                placeholder="********"
+                                                {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Your password must be at least 8 characters long.
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+
+                            {/* Message Display */}
+                            <FormDescription>
+                                {message?.charAt(0) === "T" ? (
+                                    message
+                                ) : (
+                                    <div className="text-red-700">{message}</div>
+                                )}
+                            </FormDescription>
+
+                            {/* Submit Button */}
+                            <Button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-full"
+                            >
+                                {isLoading ? "Loading..." : "Submit"}
+                            </Button>
+
+                            {/* Divider */}
+                            <div className="relative">
+                                <div className="absolute inset-0 flex items-center">
+                                    <span className="w-full border-t" />
+                                </div>
+                                <div className="relative flex justify-center text-xs uppercase">
+                                    <span className="bg-background px-2 text-muted-foreground">or</span>
+                                </div>
+                            </div>
+                        </form>
+                    </Form>
+
+                    {/* Register Button */}
+                    <Button
+                        variant="outline"
+                        className="text-white w-full mt-4"
+                        onClick={() => navigate("/register")}
+                    >
+                        Register
                     </Button>
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-muted-foreground">or</span>
-                        </div>
-                    </div>
-                </form>
-            </Form>
-            <Button
-                variant="outline"
-                className="text-white"
-                onClick={() => {
-                    navigate("/register");
-                }}
-            >
-                Register
-            </Button>
+                </div> : <Button variant="secondary">Proceed to Dashboard</Button>}
+
         </>
     );
 }
