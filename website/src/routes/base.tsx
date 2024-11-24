@@ -4,11 +4,12 @@ import Home from '@/pages/home';
 import AuthenticationPage from '@/pages/register';
 import LoginAuthenticationPage from '@/pages/login';
 import AuthRequired from '@/components/AuthRequired';
+import DashBoardLayout from '@/components/layouts/DashBase';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <AuthRequired><RootLayout /></AuthRequired>,
+    element: <AuthRequired><DashBoardLayout /></AuthRequired>,
     children: [
       {
         index: true,

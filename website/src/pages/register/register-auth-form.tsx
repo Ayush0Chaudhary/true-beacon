@@ -61,17 +61,17 @@ export function UserAuthForm() {
     );
     console.log(res.data['access_token'], res);
     localStorage.setItem('access_token', res.data['access_token']);
-    if(res.status === 201 && res.data['access_token']) {
+    if (res.status === 201 && res.data['access_token']) {
       navigate('/');
+
       setSuccess(true);
-    }else 
-    {
+    } else {
       setMessage("Username already exists. Try again with a different username.");
     }
   }
 
   return (
-    <>{!success ? <><Form {...form}>
+    <><Form {...form}>
       <form onSubmit={
         // e.preventDefault();
         form.handleSubmit(onSubmit)} className="space-y-5">
@@ -132,13 +132,17 @@ export function UserAuthForm() {
           </div>
         </div>
       </form>
-    </Form><Button variant="outline" className="text-white" onClick={() => { 
+    </Form><Button variant="outline" className="text-white" onClick={() => {
       console.log(success);
-      
-      navigate('/login'); } }>
+
+      navigate('/login');
+    }}>
         Login
-      </Button></>: <Button variant="secondary">Proceed to Dashboard</Button>}
-    </>
+      </Button>
+      { localStorage.getItem('access_token') &&
+      <Button onClick={() => {navigate('/')}}
+                    className="text-white w-full mt-4">Go to DashBoard</Button>}</>
+
 
   );
 }

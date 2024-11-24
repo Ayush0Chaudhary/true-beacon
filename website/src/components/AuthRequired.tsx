@@ -10,6 +10,12 @@ const AuthRequired = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (!username) {
       navigate('/login');
+      console.log("No username");
+      
+    }else {
+      console.log("Username exists");
+      
+      navigate('/');
     }
     setShow(true);
   }, [username, navigate]);

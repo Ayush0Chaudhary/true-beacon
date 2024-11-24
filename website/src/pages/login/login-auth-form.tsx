@@ -44,6 +44,7 @@ export function UserAuthForm() {
     const [message, setMessage] = React.useState<string | null>("This will be your username for logging in.");
     const [success, setSuccess] = React.useState<boolean>(false);
     useEffect(() => {
+        
         console.log(Date.now());
     }, []);
 
@@ -64,8 +65,6 @@ export function UserAuthForm() {
             localStorage.setItem("access_token", res.data["access_token"]);
 
             if (res.data["access_token"]) {
-                console.log("success");
-                console.log("Task executed after 200ms");
                 navigate("/");
                 setSuccess(true);
             } else {
@@ -81,92 +80,86 @@ export function UserAuthForm() {
 
     return (
         <>
-            {!success ?
-                <div className="p-4 sm:max-w-md lg:max-w-lg mx-auto">
-                    <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(onSubmit)} // Prevents default refresh
-                            className="space-y-5"
-                        >
-                            {/* Username Field */}
-                            <FormField
-                                control={form.control}
-                                name="username"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-white">Username</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                className="text-white w-full"
-                                                placeholder="JohnDoe123"
-                                                {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )} />
-
-                            {/* Password Field */}
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-white">Password</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                className="text-white w-full"
-                                                type="password"
-                                                placeholder="********"
-                                                {...field} />
-                                        </FormControl>
-                                        <FormDescription>
-                                            Your password must be at least 8 characters long.
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )} />
-
-                            {/* Message Display */}
-                            <FormDescription>
-                                {/* {message?.charAt(0) === "T" ? (
-                                    message
-                                ) : (
-                                    <div className="text-red-700">{message}</div>
-                                )} */}
-                                {message }
-                            </FormDescription>
-
-                            {/* Submit Button */}
-                            <Button
-                                type="submit"
-                                disabled={isLoading}
-                                className="w-full"
-                            >
-                                {isLoading ? "Loading..." : "Submit"}
-                            </Button>
-
-                            {/* Divider */}
-                            <div className="relative">
-                                <div className="absolute inset-0 flex items-center">
-                                    <span className="w-full border-t" />
-                                </div>
-                                <div className="relative flex justify-center text-xs uppercase">
-                                    <span className="bg-background px-2 text-muted-foreground">or</span>
-                                </div>
-                            </div>
-                        </form>
-                    </Form>
-
-                    {/* Register Button */}
-                    <Button
-                        variant="outline"
-                        className="text-white w-full mt-4"
-                        onClick={() => navigate("/register")}
+            <div className="p-4 sm:max-w-md lg:max-w-lg mx-auto">
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)} // Prevents default refresh
+                        className="space-y-5"
                     >
-                        Register
-                    </Button>
-                </div> : <Button variant="secondary">Proceed to Dashboard</Button>}
+                        {/* Username Field */}
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-white">Username</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className="text-white w-full"
+                                            placeholder="JohnDoe123"
+                                            {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
 
-        </>
-    );
+                        {/* Password Field */}
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-white">Password</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className="text-white w-full"
+                                            type="password"
+                                            placeholder="********"
+                                            {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Your password must be at least 8 characters long.
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+
+                        {/* Message Display */}
+                        <FormDescription>
+                            {message}
+                        </FormDescription>
+
+                        {/* Submit Button */}
+                        <Button
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-full"
+                        >
+                            {isLoading ? "Loading..." : "Submit"}
+                        </Button>
+
+                        {/* Divider */}
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <span className="w-full border-t" />
+                            </div>
+                            <div className="relative flex justify-center text-xs uppercase">
+                                <span className="bg-background px-2 text-muted-foreground">or</span>
+                            </div>
+                        </div>
+                    </form>
+                </Form>
+
+                {/* Register Button */}
+                <Button
+                    variant="outline"
+                    className="text-white w-full mt-4"
+                    onClick={() => navigate("/register")}
+                >
+                    Register
+                </Button>{localStorage.getItem('access_token') &&
+                <Button onClick={() => {navigate('/')}}
+                    className="text-white w-full mt-4">Go to DashBoard</Button>}
+            </div>
+        </>  );
 }
