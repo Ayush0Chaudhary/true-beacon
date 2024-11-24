@@ -84,8 +84,19 @@ const Homepage = () => {
   const [totalPnl, setTotalPnl] = useState<number>(0);
   const [totall, setTotall] = useState<number>(0);
   const [totalp, setTotalP] = useState<number>(0);
+
+  const checkAuth = async () => {
+    console.log('Checking auth');
+    try{
+    await basicAxios(API_ENDPOINTS.STATUS, undefined, undefined, 'GET');
+    } catch (error) {
+      navigate('/login');
+    }
+  }
+
   useEffect(() => {
 
+    checkAuth();
     const fetchHoldings = async () => {
       setTableLoading(true);
       const res = await basicAxios(API_ENDPOINTS.HOLDINGS, undefined, undefined, 'GET');

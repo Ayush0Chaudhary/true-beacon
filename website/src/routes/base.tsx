@@ -5,11 +5,12 @@ import AuthenticationPage from '@/pages/register';
 import LoginAuthenticationPage from '@/pages/login';
 import AuthRequired from '@/components/AuthRequired';
 import DashBoardLayout from '@/components/layouts/DashBase';
+import AuthAlert from '@/components/AuthAlert';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <AuthRequired><DashBoardLayout /></AuthRequired>,
+    element: <DashBoardLayout />,
     children: [
       {
         index: true,
@@ -19,7 +20,8 @@ const router = createBrowserRouter([
   },
   {
     path: '/register',
-    element: <RootLayout />,
+    element: 
+      <DashBoardLayout />,
     children: [
       {
         index: true,
@@ -29,7 +31,14 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <LoginAuthenticationPage />,
+    element: <DashBoardLayout/>,
+    children: [
+      {
+        index: true,
+        element: <LoginAuthenticationPage />,
+      },
+     
+    ],
   }
 ]);
 
