@@ -94,7 +94,7 @@ function LoginAuthenticationPage() {
       }
       const res = await basicAxios(API_ENDPOINTS.REGISTER, body, undefined, "POST");
       if (res.data["access_token"]) {
-              setIsRegister(false); // Switch to login form after successful registration
+        setIsRegister(false); 
         localStorage.setItem("access_token", res.data["access_token"]);
         navigate("/");
       } else {

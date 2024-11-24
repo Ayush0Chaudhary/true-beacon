@@ -3,22 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthProvider';
 
 const AuthRequired = ({ children }: { children: React.ReactNode }) => {
-  const { username } = useAuth();
+  const { username, loading } = useAuth();
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!username) {
-      navigate('/login');
-      console.log("No username");
-      
-    }else {
-      console.log("Username exists");
-      
-      // navigate('/');
+    console.log("AuthRequired useEffect");
+    
+    if (!loading) {
+      if (!username) {
+        navigate('/login');
+        console.log("No username");
+
+      } else {
+        console.log("Username exists");
+
+        // navigate('/');
+      }
+      setShow(true);
     }
-    setShow(true);
-  }, [username, navigate]);
+  }, [username, navigate, loading]);
 
   return <>{show && children}</>;
 };
