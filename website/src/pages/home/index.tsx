@@ -12,6 +12,8 @@ import { API_ENDPOINTS } from '@/const';
 import PnlCard from './pnl-card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import LiveNifty from './live-nifty';
+import { Separator } from '@radix-ui/react-dropdown-menu';
 
 
 
@@ -80,6 +82,8 @@ const Homepage = () => {
   const [holdings, setHoldings] = useState<_Holding[]>([]);
   const [tableLoading, setTableLoading] = useState<boolean>(true);
   const [totalPnl, setTotalPnl] = useState<number>(0);
+  const [totall, setTotall] = useState<number>(0);
+  const [totalp, setTotalP] = useState<number>(0);
   useEffect(() => {
 
     const fetchHoldings = async () => {
@@ -88,6 +92,9 @@ const Homepage = () => {
       setHoldings(res.data);
       // sum all the pnl
       setTotalPnl(res.data.reduce((acc: number, curr: _Holding) => acc + curr.pnl, 0));
+      setTotalP(res.data.reduce((acc: number, curr: _Holding) => acc + curr.pnl, 0));
+      setTotalP(res.data.reduce((acc: number, curr: _Holding) => acc + (curr.pnl > 0 ? curr.pnl : 0), 0));
+      setTotall(res.data.reduce((acc: number, curr: _Holding) => acc + (curr.pnl < 0 ? curr.pnl : 0), 0));
       console.log(totalPnl);
 
       setTableLoading(false);
@@ -99,25 +106,36 @@ const Homepage = () => {
       <div className='container mx-auto'>
         {/* <Navbar /> */}
         {/* <Separator /> */}
-        <ModeToggle />
         {/* <DateForm/> */}
+        <div className='flex justify-end '>
+      <Button variant="outline" className='text-white m-2 rounded-xl'  onClick={(e) => { localStorage.removeItem('access_token'); navigate('/login') }}>Logout</Button>
+      </div>
         <div>
           <ChartComponent />
+          <div className='flex flex-row w-full justify-center'>
           <ProfileCard />
+
+      <PnlCard initialNumber={totalPnl} header={ "Total:"}  />
+      <PnlCard initialNumber={totalp} header={ "Profit:"}  />
+      <PnlCard initialNumber={totall} header={ "Loss:"}  />
+      <LiveNifty/>
+
+      </div>
+          {tableLoading ? <Loader /> :
+        <DataTable columns={columns} data={holdings} />
+
+      }
+      <div className='justify-center w-full flex'>      <PlaceOrderForm/>
+      </div>
+
+
         </div>
         <div className='max-w-full mx-auto px-8'>
           {/* Adjusted max-w-full to make content expand to the maximum width */}
           {/* <HoverEffect items={projects} /> */}
         </div>
       </div>
-      <button onClick={handle}>holding</button>
-      {tableLoading ? <Loader /> :
-        <DataTable columns={columns} data={holdings} />
 
-      }
-      <PnlCard initialNumber={totalPnl} />
-      <PlaceOrderForm />
-      <Button variant="outline" className='text-white' onClick={(e) => { localStorage.removeItem('access_token'); navigate('/login') }}>Logout</Button>
     </div>
   );
 };

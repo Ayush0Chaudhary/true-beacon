@@ -61,10 +61,9 @@ export function UserAuthForm() {
     console.log(res.data['access_token'], res);
     localStorage.setItem('access_token', res.data['access_token']);
     if(res.status === 201 && res.data['access_token']) {
-      setTimeout(() => {
       navigate('/');
         
-      }, 200);
+
     }
   }
 

@@ -1,23 +1,18 @@
-"use client"
 
 import * as React from "react"
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
-import { Skeleton } from "@/components/ui/skeleton"
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
 
 
-
-
-////////////////////////
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { toast } from "@/components/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,7 +20,38 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-// Zod schema to validate two date fields
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
+import { basicAxios } from "@/services/basicAxios"
+import { _CHARTDATA } from "@/types"
+import Loader from "./ui/loader";
+
+
+const chartConfig = {
+  views: {
+    label: "Price",
+  },
+  nifty50: {
+    label: "NIFTY",
+    color: "hsl(var(--chart-1))",
+  },
+  niftybank: {
+    label: "NIFTY",
+    color: "hsl(var(--chart-2))",
+  },
+} satisfies ChartConfig
 const FormSchema = z.object({
   startDate: z
     .string()
@@ -47,109 +73,6 @@ const FormSchema = z.object({
     }),
 });
 
-export function DateForm() {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      startDate: "",
-      endDate: "",
-    },
-  });
-
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-
-    console.log(data);
-
-  }
-
-  return (<Form {...form}>
-    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-4">
-      {/* <div className=""> */}
-      {/* Start Date Field */}
-      <FormField
-        control={form.control}
-        name="startDate"
-        render={({ field }) => (
-          <FormItem>
-            <FormControl>
-              <Input className="bg-white" type="date" placeholder="yyyy-mm-dd" {...field} />
-            </FormControl>
-            <FormLabel className="text-white">Start Date</FormLabel>
-
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      {/* End Date Field */}
-      <FormField
-        control={form.control}
-        name="endDate"
-        render={({ field }) => (
-          <FormItem>
-            <FormControl>
-              <Input className="bg-white" type="date" placeholder="yyyy-mm-dd" {...field} />
-            </FormControl>
-            <FormLabel className="text-white">End Date</FormLabel>
-
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <div className="flex flex-col">
-        {/* <FormLabel className="text-white">End Date</FormLabel> */}
-        <Button type="submit">Submit</Button>
-      </div>
-      {/* </div> */}
-    </form>
-  </Form>
-  );
-}
-
-
-///////////////////////////
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
-import { basicAxios } from "@/services/basicAxios"
-import { _CHARTDATA } from "@/types"
-import { DatePickerDemo } from "./ui/date-picker"
-import Loader from "./ui/loader";
-
-
-const chartConfig = {
-  views: {
-    label: "Price",
-  },
-  nifty50: {
-    label: "NIFTY",
-    color: "hsl(var(--chart-1))",
-  },
-  niftybank: {
-    label: "NIFTY",
-    color: "hsl(var(--chart-2))",
-  },
-} satisfies ChartConfig
-
 export function ChartComponent() {
   const [activeChart, setActiveChart] =
     React.useState<keyof typeof chartConfig>("nifty50")
@@ -166,7 +89,7 @@ export function ChartComponent() {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
-    
+
     setStartDate(data.startDate);
     setEndDate(data.endDate);
   }
@@ -187,13 +110,13 @@ export function ChartComponent() {
       );
 
       const mergedData = res50.data.map((item: _CHARTDATA) => {
-        const bankItem = resbank.data.find((bank: _CHARTDATA) => bank.date === item.date);  // Find the matching date in resbank
+        const bankItem = resbank.data.find((bank: _CHARTDATA) => bank.date === item.date);  
         const formattedDate = new Date(item.date).toLocaleDateString('en-CA');
 
         return {
           date: formattedDate,
           nifty50: item.price,
-          niftybank: bankItem ? bankItem.price : 0, // Fallback to 0 if no matching data is found
+          niftybank: bankItem ? bankItem.price : 0, 
         };
       });
 
@@ -221,13 +144,6 @@ export function ChartComponent() {
     fetchChartData(startDate, endDate);
   }, [startDate, endDate]);
 
-  // const total = React.useMemo(
-  //   () => ({
-  //     desktop: chartData.reduce((acc, curr) => acc + curr.nifty50, 0),
-  //     mobile: chartData.reduce((acc, curr) => acc + curr.niftybank, 0),
-  //   }),
-  //   []
-  // )
   function print(vlur: any) {
     console.log(fetched50Data);
     console.log(fetchedBankData);
@@ -235,15 +151,14 @@ export function ChartComponent() {
 
   }
 
-  // const [graph, setGraph] = React.useState("bar");  
 
   return (
-    !loaded ?   <Loader/>  :
-      <Card>
+    !loaded ? <Loader /> :
+      <Card >
         {/* <button onClick={print}>test button</button> */}
-        <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
+        <CardHeader className="flex flex-col items-stretch space-y-0 border-b border-input   p-0 sm:flex-row">
           <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-            <CardTitle>NIFTY CHART</CardTitle>
+            <CardTitle className="pb-2">NIFTY CHART</CardTitle>
             <CardDescription>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-4">
@@ -255,7 +170,9 @@ export function ChartComponent() {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input className="bg-white" type="date" placeholder="yyyy-mm-dd" {...field} />
+                          {/* <div style={{colorScheme: 'light'}}> */}
+                          <Input className="bg-[#141415] mb-1" type="date" placeholder="yyyy-mm-dd" {...field} />
+                          {/* </div> */}
                         </FormControl>
                         <FormLabel className="text-white">Start Date</FormLabel>
 
@@ -271,7 +188,7 @@ export function ChartComponent() {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input className="bg-white" type="date" placeholder="yyyy-mm-dd" {...field} />
+                          <Input className="bg-[#141415] mb-1" type="date" placeholder="yyyy-mm-dd" {...field} />
                         </FormControl>
                         <FormLabel className="text-white">End Date</FormLabel>
 
@@ -281,21 +198,25 @@ export function ChartComponent() {
                   />
                   <div className="flex flex-col">
                     {/* <FormLabel className="text-white">End Date</FormLabel> */}
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" className="rounded-xl">Submit</Button>
                   </div>
                   {/* </div> */}
                 </form>
+                <FormDescription className="pt-2">
+                  Select Date between 2/01/2017 and 31/12/2021
+                </FormDescription>
               </Form>
+
             </CardDescription>
           </div>
-          <div className="flex">
+          <div className="flex ">
             {["nifty50", "niftybank"].map((key) => {
               const chart = key as keyof typeof chartConfig
               return (
                 <button
                   key={chart}
                   data-active={activeChart === chart}
-                  className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
+                  className="flex flex-1 flex-col justify-center border-input gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
                   onClick={() => setActiveChart(chart)}
                 >
                   <span className="text-xs text-muted-foreground">
@@ -323,11 +244,11 @@ export function ChartComponent() {
                 right: 12,
               }}
             >
-              <CartesianGrid vertical={false} />
+              <CartesianGrid vertical={true} />
               <XAxis
                 dataKey="date"
-                tickLine={false}
-                axisLine={false}
+                tickLine={true}
+                axisLine={true}
                 tickMargin={8}
                 minTickGap={32}
                 tickFormatter={(value) => {
@@ -339,6 +260,13 @@ export function ChartComponent() {
                   })
                 }}
               />
+                <YAxis
+                tickLine={true}
+                axisLine={true}
+                tickMargin={8}
+                tickFormatter={(value) => value.toLocaleString()}
+                />
+
               <ChartTooltip
                 content={
                   <ChartTooltipContent

@@ -33,3 +33,8 @@ export type _Holding = {
     day_change: number;
     day_change_percentage: number;
 }
+
+export type NiftyPrice = {
+    price: number;
+  }
+  

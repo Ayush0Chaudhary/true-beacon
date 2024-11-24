@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input"
 import React from "react"
 import { basicAxios } from "@/services/basicAxios"
 import { API_ENDPOINTS } from "@/const";
+import { CardTitle } from "@/components/ui/card";
 
 
 const formSchema = z.object({
@@ -68,7 +69,8 @@ export function PlaceOrderForm() {
     }
 
     return (
-        <div className=" border-2 p-10"><Form {...form}>
+        <div className="border border-input rounded-xl text-card-foreground shadow p-4 "><Form {...form}>
+            <CardTitle className="pb-4">Place order</CardTitle>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
@@ -112,8 +114,9 @@ export function PlaceOrderForm() {
                             <FormMessage />
                         </FormItem>
                     )} />
-                <Button type="submit">Place Order</Button>
-
+                    <div className="flex justify-center mt-4 ">
+                <Button type="submit" className="rounded-xl">Place Order</Button>
+                </div>
             </form>
         </Form>
         </div>

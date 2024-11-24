@@ -1,4 +1,4 @@
-import { UserAuthForm } from "./auth-form"
+import { UserAuthForm } from "./login-auth-form"
 
 
 export default function LoginAuthenticationPage() {
